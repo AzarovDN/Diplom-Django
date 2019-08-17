@@ -1,9 +1,14 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.core.paginator import Paginator
 
 from .models import Article, Category, Product, Order, OrderItem
+
+
+from .forms import UserRegistrationForm
 
 
 class ArticleView(ListView):
@@ -54,7 +59,9 @@ class CategoryView(DetailView):
 
         return context
 
-    def post(self, request, *args, **kwargs):        
+    def post(self, request, *args, **kwargs):
+        print(args)
+        slug = kwargs['slug']
         current_page = request.POST.get('current_page')                
         product = request.POST.get('product')
         if 'cart' in request.session:
@@ -67,8 +74,10 @@ class CategoryView(DetailView):
         else:
             request.session['cart'] = {product: 1}
         return redirect(f'http://127.0.0.1:8000/shop/category/noutbuki/?page={current_page}')
-    
-    
+        # return HttpResponseRedirect(reverse('category', args=[slug, current_page]))
+        # return HttpResponseRedirect(reverse('category', kwargs={'slug': slug, 'current_page': current_page}))
+
+
 class ProductView(DetailView):
     template_name = 'shop/product.html'
     model = Product
@@ -112,3 +121,19 @@ def cart(request):
         message = 'Заказ оформлен'
     return render(request, 'shop/cart.html', {'cart_list': cart_list, 'counter': counter, 'message': message})
 
+
+def register(request):
+    if request.method == 'POST':
+        user_form = UserRegistrationForm(request.POST)
+        if user_form.is_valid():
+            # Create a new user object but avoid saving it yet
+            new_user = user_form.save(commit=False)
+            # Set the chosen password
+            new_user.set_password(user_form.cleaned_data['password'])
+            # Save the User object
+            new_user.save()
+            return render(request, 'registration/register_done.html', {'new_user': new_user})
+    else:
+        user_form = UserRegistrationForm()
+    print(user_form.errors)
+    return render(request, 'registration/register.html', {'user_form': user_form})

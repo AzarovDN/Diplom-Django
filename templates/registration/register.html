@@ -1,0 +1,35 @@
+
+{% extends "registration/basic_registration.html" %}
+
+<!--{% load static %}-->
+
+{% block title%} Создайте акаунт {% endblock %}
+
+{% block content %}
+
+<form  class="form-signin" action="." method="post">
+    {% csrf_token %}
+    <img class="mb-4" src="{% static "logo.svg" %}" alt="" width="72" height="72">
+    <h1 class="h3 mb-3 font-weight-normal">Создайте акаунт</h1>
+
+    {{user_form.username.errors }}
+    {{user_form.password2.errors }}
+
+    <input type="login" id="username" class="form-control" placeholder="Логин" name="username"
+    value="{% if user_form.username.value%} {{user_form.username.value}} {% endif %}" required="" autofocus="" data-cip-id="inputLogin">
+    <input type="first_name" id="first_name" class="form-control" placeholder="Имя" name="first_name"
+    value="{% if user_form.first_name.value%} {{user_form.first_name.value}} {% endif %}" required="" autofocus="" data-cip-id="inputLogin">
+    <input type="email" id="inputEmail" class="form-control" placeholder="Email" name="email"
+    value="{% if user_form.email.value%} {{user_form.email.value}} {% endif %}" required="" autofocus="" data-cip-id="inputLogin">
+    <input type="password" id="inputPassword" class="form-control" placeholder="Пароль"
+     name="password" required="" data-cip-id="inputPassword">
+    <input type="password2" id="inputPassword2" class="form-control" placeholder="Пароль"
+     name="password2" required="" data-cip-id="inputPassword2">
+    <input class="btn btn-lg btn-primary btn-block" type="submit" value="Создать акаунт">
+      <br>
+    <a href="/"> На главную страницу</a>
+
+    <p class="mt-5 mb-3 text-muted">© Просто магазин 2018</p>
+</form>
+
+{% endblock %}

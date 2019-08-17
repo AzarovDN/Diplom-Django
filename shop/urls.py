@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.urls import path
 from django.http import HttpResponseRedirect
-from .views import ArticleView, CategoryView, ProductView, cart
+from .views import ArticleView, CategoryView, ProductView, cart, register
 
 
 urlpatterns = [
@@ -24,4 +24,5 @@ urlpatterns = [
     path('shop/category/<slug:slug>/', CategoryView.as_view(), name='category'),
     path('shop/product/<slug:slug>/', ProductView.as_view(), name='product'),
     path('shop/cart/', cart, name='cart'),
+    path('accounts/register/', register, name='register'),
 ]
